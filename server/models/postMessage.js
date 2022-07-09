@@ -9,7 +9,7 @@ const postSchema = mongoose.Schema({
   },
   creator: {
     type: String,
-    unique: true
+    unique: true,
   },
   tags: {
     type: [String],
@@ -19,14 +19,14 @@ const postSchema = mongoose.Schema({
   },
   likeCount: {
     type: Number,
-    default: 0
+    default: 0,
   },
   createdAt: {
     type: Date,
-    default: new Date()
-  }
-})
+    default: new Date(),
+  },
+});
 
-const PostMessage = mongoose.model("PostMessage", postSchema)
+const PostMessage = mongoose.model("PostMessage", postSchema);
 
 export default PostMessage;

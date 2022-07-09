@@ -1,78 +1,110 @@
-import React, { useState } from 'react'
-import { Button, Typography, TextField, Paper } from '@mui/material';
-import FileBase from "react-file-base64"
-import { useDispatch } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import { Button, Typography, TextField, Paper } from "@mui/material";
+import FileBase from "react-file-base64";
+import { useDispatch, useSelector } from "react-redux";
 
-import useStyles from "./styles"
-import { createPost } from '../../actions/posts';
+import useStyles from "./styles";
+import { createPost, updatePost } from "../../actions/posts";
 
-const Form = () => {
+const Form = ({ currentId, setCurrentId }) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const posts = useSelector((state) => currentId 
+  ? state.posts.find((post) => post._id === currentId)
+  : null);
 
   const [postData, setPostData] = useState({
     creator: "",
     title: "",
     message: "",
     tags: "",
-    selectedFile: ""
-  })
+    selectedFile: "",
+  });
 
-  const dispatch = useDispatch()
+  useEffect(() => {
+    if(posts) setPostData(posts);
+  }, [posts])
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(createPost(postData))
-  }
+
+    if(currentId) {
+      dispatch(updatePost(currentId, postData));
+    } else {
+      dispatch(createPost(postData));
+    }
+
+    clear();
+  };
 
   const clear = () => {
-
-  }
+    setCurrentId(null);
+    setPostData({
+      creator: "",
+      title: "",
+      message: "",
+      tags: "",
+      selectedFile: ""
+    });
+  };
 
   return (
     <Paper className={classes.paper}>
-      <form 
+      <form
         autoComplete="off"
         noValidate
         className={`${classes.root} ${classes.form}`}
-        onSubmit={handleSubmit} 
+        onSubmit={handleSubmit}
       >
-        <Typography variant="h6">Display your project</Typography>
-        <TextField 
-          name="creator" variant="outlined"
+        <Typography variant="h6">{currentId ? "Editing" : "Creating"} a Memory </Typography>
+        <TextField
+          name="creator"
+          variant="outlined"
           label="Creator"
           fullWidth
           value={postData.creator}
-          onChange={(e) => setPostData({ ...postData, creator: e.target.value })}
+          onChange={(e) =>
+            setPostData({ ...postData, creator: e.target.value })
+          }
         />
-        <TextField 
-          name="title" variant="outlined"
+        <TextField
+          name="title"
+          variant="outlined"
           label="Title"
           fullWidth
           value={postData.title}
           onChange={(e) => setPostData({ ...postData, title: e.target.value })}
         />
-        <TextField 
-          name="message" variant="outlined"
+        <TextField
+          name="message"
+          variant="outlined"
           label="Message"
           fullWidth
           value={postData.message}
-          onChange={(e) => setPostData({ ...postData, message: e.target.value })}
+          onChange={(e) =>
+            setPostData({ ...postData, message: e.target.value })
+          }
         />
-        <TextField 
-          name="tags" variant="outlined"
+        <TextField
+          name="tags"
+          variant="outlined"
           label="Tags"
           fullWidth
           value={postData.tags}
-          onChange={(e) => setPostData({ ...postData, tags: e.target.value.split(",") })}
+          onChange={(e) =>
+            setPostData({ ...postData, tags: e.target.value.split(",") })
+          }
         />
-        <div className={classes.fileInput} >
+        <div className={classes.fileInput}>
           <FileBase
             type="file"
             multiple={false}
-            onDone={({ base64 }) => setPostData({ ...postData, selectedFile: base64 })}
+            onDone={({ base64 }) =>
+              setPostData({ ...postData, selectedFile: base64 })
+            }
           />
         </div>
-        <Button 
+        <Button
           style={{ marginBottom: 10 }}
           variant="contained"
           color="primary"
@@ -82,7 +114,7 @@ const Form = () => {
         >
           Submit
         </Button>
-        <Button 
+        <Button
           variant="contained"
           color="secondary"
           size="small"
@@ -93,7 +125,7 @@ const Form = () => {
         </Button>
       </form>
     </Paper>
-  )
-}
+  );
+};
 
-export default Form
+export default Form;
