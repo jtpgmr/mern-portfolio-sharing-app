@@ -7,7 +7,7 @@ import { applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
 import { rootReducer } from "./reducers";
 
-import "./index.css"
+import "./index.css";
 
 const store = configureStore(
   { reducer: rootReducer },

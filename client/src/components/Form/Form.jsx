@@ -9,9 +9,9 @@ import { createPost, updatePost } from "../../actions/posts";
 const Form = ({ currentId, setCurrentId }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const posts = useSelector((state) => currentId 
-  ? state.posts.find((post) => post._id === currentId)
-  : null);
+  const posts = useSelector((state) =>
+    currentId ? state.posts.find((post) => post._id === currentId) : null
+  );
 
   const [postData, setPostData] = useState({
     creator: "",
@@ -22,13 +22,13 @@ const Form = ({ currentId, setCurrentId }) => {
   });
 
   useEffect(() => {
-    if(posts) setPostData(posts);
-  }, [posts])
+    if (posts) setPostData(posts);
+  }, [posts]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if(currentId) {
+    if (currentId) {
       dispatch(updatePost(currentId, postData));
     } else {
       dispatch(createPost(postData));
@@ -44,7 +44,7 @@ const Form = ({ currentId, setCurrentId }) => {
       title: "",
       message: "",
       tags: "",
-      selectedFile: ""
+      selectedFile: "",
     });
   };
 
@@ -56,7 +56,9 @@ const Form = ({ currentId, setCurrentId }) => {
         className={`${classes.root} ${classes.form}`}
         onSubmit={handleSubmit}
       >
-        <Typography variant="h6">{currentId ? "Editing" : "Creating"} a Memory </Typography>
+        <Typography variant="h6">
+          {currentId ? "Editing" : "Creating"} a Memory{" "}
+        </Typography>
         <TextField
           name="creator"
           variant="outlined"
