@@ -11,6 +11,7 @@ import { ThumbUpAlt, Clear, MoreHoriz } from "@mui/icons-material";
 import moment from "moment";
 import { useDispatch } from "react-redux";
 import { deletePost, likePost } from "../../../actions/posts";
+import Tag from "../../Tag/Tag"
 
 import useStyles from "./styles";
 
@@ -40,8 +41,12 @@ const Post = ({ post, setCurrentId }) => {
         </Button>
       </div>
       <div className={classes.details}>
-        <Typography variant="body2" color="textSecondary" component="h2">
-          {post.tags.map((tag) => `#${tag} `)}
+        <Typography variant="body2" color="textSecondary" component="h2"
+        style={{ display: "flex", flexDirection: "row" }}
+        >
+          {[...new Set(post.tags)].map((tag) => 
+          <Tag tag={tag} />
+          )}
         </Typography>
       </div>
       <Typography className={classes.title} gutterBottom variant="h5">

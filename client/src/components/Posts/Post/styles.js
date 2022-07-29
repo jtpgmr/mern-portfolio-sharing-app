@@ -1,18 +1,7 @@
+
 import { makeStyles } from "@mui/styles";
 
-export default makeStyles({
-  media: {
-    height: 0,
-    paddingTop: "56.25%",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    backgroundBlendMode: "darken",
-  },
-  border: {
-    border: "solid",
-  },
-  fullHeightCard: {
-    height: "100%",
-  },
+export default makeStyles((theme) => ({
   card: {
     display: "flex",
     flexDirection: "column",
@@ -20,6 +9,25 @@ export default makeStyles({
     borderRadius: "15px",
     height: "100%",
     position: "relative",
+    "&:hover": {
+      backgroundColor: "grey",
+      transform: "scale(1.1)",
+      cursor: "pointer"
+    }
+  },
+  media: {
+    height: 210,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backgroundBlendMode: "darken",
+    "&:hover": {
+
+    }
+  },
+  border: {
+    border: "solid",
+  },
+  fullHeightCard: {
+    height: "100%",
   },
   overlay: {
     position: "absolute",
@@ -48,4 +56,4 @@ export default makeStyles({
     display: "flex",
     justifyContent: "space-between",
   },
-});
+}));

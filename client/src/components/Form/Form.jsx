@@ -118,7 +118,7 @@ const Form = ({ currentId, setCurrentId }) => {
         </Button>
         <Button
           variant="contained"
-          color="secondary"
+          color="error"
           size="small"
           onClick={clear}
           fullWidth

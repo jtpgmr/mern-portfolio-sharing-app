@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core";
+import { makeStyles } from "@mui/styles";
 
 export default makeStyles((theme) => ({
   root: {
@@ -9,6 +9,11 @@ export default makeStyles((theme) => ({
   paper: {
     padding: theme.spacing(2),
   },
+  // [theme.breakpoints.down("sm")]: {
+  //   paper: {
+  //     padding: theme.spacing(4)
+  //   },
+  // },
   form: {
     display: "flex",
     flexWrap: "wrap",
