@@ -12,10 +12,11 @@ import { GoogleLogin } from "react-google-login";
 import { gapi } from "gapi-script";
 import { useDispatch } from "react-redux";
 
+import { signIn, signUp } from "../../actions/auth"
 import Input from "./Input";
 import useStyles from "./styles";
 import Icon from "./icon";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const initialState = {
   firstName: "",
@@ -35,6 +36,7 @@ const Auth = () => {
   const [formData, setFormData] = useState(initialState);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -42,6 +44,12 @@ const Auth = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if(isSignedUp) {
+      dispatch(signUp(formData, location))
+    } else {
+      dispatch(signIn(formData, location))
+    }
   };
 
   const switchAuthScreen = () => {
