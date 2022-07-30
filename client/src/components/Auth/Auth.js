@@ -1,27 +1,85 @@
-import React, { useState } from "react";
-import { Container, Paper, Avatar, Typography, Button, Grid } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import {
+  Container,
+  Paper,
+  Avatar,
+  Typography,
+  Button,
+  Grid,
+} from "@mui/material";
 import { LockOutlined } from "@mui/icons-material";
+import { GoogleLogin } from "react-google-login";
+import { gapi } from "gapi-script";
+import { useDispatch } from "react-redux";
 
 import Input from "./Input";
-
 import useStyles from "./styles";
+import Icon from "./icon";
+import { useNavigate } from "react-router-dom";
+
+const initialState = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+};
+
+const clientId =
+  process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID;
 
 const Auth = () => {
   const classes = useStyles();
-  const [showPassword, setShowPassword] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
   const [isSignedUp, setIsSignedUp] = useState(false);
+  const [formData, setFormData] = useState(initialState);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const handleSubmit = () => {
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
 
-  const handleChange = () => {
-    
-  }
+  const switchAuthScreen = () => {
+    setFormData(initialState);
+    setIsSignedUp((prevIsSignedUp) => !prevIsSignedUp);
+    setShowPassword(false);
+  };
 
   const handleShowPassword = () => {
-    setShowPassword((prevShowPassword) => !prevShowPassword)
-  }
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
+
+  const googleSuccess = async (res) => {
+    const result = res?.profileObj;
+    const token = res?.tokenId;
+
+    try {
+      dispatch({ type: "AUTH", payload: { result, token } });
+
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const googleFailure = (error) => {
+    console.log("Login unsuccessful! res:", error);
+  };
+
+  useEffect(() => {
+    const start = () => {
+      gapi.client.init({
+        clientId: clientId,
+        scope: "openid",
+      });
+    };
+    gapi.load("client:auth2", start);
+  });
 
   return (
     <Container component="main" maxWidth="xs">
@@ -82,6 +140,34 @@ const Auth = () => {
           >
             {isSignedUp ? "Sign Up" : "Sign In"}
           </Button>
+          <GoogleLogin
+            clientId={clientId}
+            render={(renderProps) => (
+              <Button
+                className={classes.googleButton}
+                color="secondary"
+                variant="contained"
+                fullWidth
+                onClick={renderProps.onClick}
+                disabled={renderProps.disabled}
+                startIcon={<Icon />}
+              >
+                Google Login
+              </Button>
+            )}
+            onSuccess={googleSuccess}
+            onFailure={googleFailure}
+            cookiePolicy={"single_host_origin"}
+          />
+          <Grid container justify="flex-end">
+            <Grid item>
+              <Button onClick={switchAuthScreen}>
+                {isSignedUp
+                  ? "Already have an account? Sign in"
+                  : "Don't have an account? Sign Up"}
+              </Button>
+            </Grid>
+          </Grid>
         </form>
       </Paper>
     </Container>
