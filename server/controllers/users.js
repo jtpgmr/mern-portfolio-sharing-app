@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import speakeasy from "speakeasy"
 
 import User from "../models/user.js";
 
@@ -19,17 +20,20 @@ export const signUp = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
+    const tempSecret = speakeasy.generateSecret()
+
     const result = await User.create({
       email,
       password: hashedPassword,
       name: `${firstName} ${lastName}`,
+      secret: tempSecret.base32
     });
 
     const token = jwt.sign({ email: result.email, id: result._id }, "secret", {
       expiresIn: "1h",
     });
 
-    res.status(201).json({ result, token });
+    res.status(201).json({ result, token, secret });
   } catch (error) {
     res.status(500).json({ message: "Something went wrong" });
 
