@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { AppBar, Avatar, Button, Toolbar, Typography } from "@mui/material";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import appfolio from "../../assets/images/appfolio.png";
+import decode from "jwt-decode";
 
+import appfolio from "../../assets/images/appfolio.png";
 import useStyles from "./styles";
 
 const NavBar = () => {
@@ -20,8 +21,16 @@ const NavBar = () => {
   };
 
   useEffect(() => {
+    const token = user?.token;
+
+    if (token) {
+      const decodedToken = decode(token);
+
+      if (decodedToken.exp * 1000 < new Date().getTime()) logout();
+    }
+
     setUser(JSON.parse(localStorage.getItem("profile")));
-  }, [location]);
+  }, [location, user?.token]);
 
   return (
     <AppBar
@@ -50,6 +59,7 @@ const NavBar = () => {
               className={classes.purple}
               alt={user?.result.name}
               src={user?.result.imageUrl}
+              referrerPolicy="no-referrer"
             >
               {user?.result.name.charAt(0)}
             </Avatar>

@@ -16,7 +16,7 @@ import { signIn, signUp } from "../../actions/auth"
 import Input from "./Input";
 import useStyles from "./styles";
 import Icon from "./icon";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const initialState = {
   firstName: "",
@@ -36,7 +36,6 @@ const Auth = () => {
   const [formData, setFormData] = useState(initialState);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -46,9 +45,9 @@ const Auth = () => {
     e.preventDefault();
 
     if(isSignedUp) {
-      dispatch(signUp(formData, location))
+      dispatch(signUp(formData, navigate))
     } else {
-      dispatch(signIn(formData, location))
+      dispatch(signIn(formData, navigate))
     }
   };
 
@@ -87,7 +86,7 @@ const Auth = () => {
       });
     };
     gapi.load("client:auth2", start);
-  });
+  }, []);
 
   return (
     <Container component="main" maxWidth="xs">

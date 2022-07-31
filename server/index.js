@@ -5,6 +5,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 import postRoutes from "./routes/posts.js";
+import usersRoutes from "./routes/users.js";
+
 
 dotenv.config();
 
@@ -15,6 +17,7 @@ app.use(cors());
 
 // Routes
 app.use("/posts", postRoutes);
+app.use("/users", usersRoutes);
 
 //MongoDB
 const CONNECTION_URL = process.env.CONNECTION_URL;
